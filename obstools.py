@@ -107,7 +107,7 @@ def powerspec(datafile,plot):
     if plot == True:
        plt.figure(figsize=(18, 5))
        plt.plot(sample_freq[cond], power[cond])
-       plt.ylabel('plower')
+       plt.ylabel('power')
        plt.xlabel('Frequency [Hz]')
        plt.xlim([0, 5])
        plt.show() 
@@ -126,9 +126,79 @@ def powerspec(datafile,plot):
         writer = csv.writer(f, delimiter=' ')
         writer.writerows(z)
 
+def read_files(file,spliter,header):
+    import numpy as np
+    global arrays
+    def is_number(s):
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
 
+    f=open(file)
+    if header == 'y':
+        dados=f.readlines()[1:]
+    else:
+        dados=f.readlines()
 
+    lists=[[] for _ in range(len(dados[0].split(spliter)))]
 
+    for linha in dados:
+        dd=linha.split(spliter)
+        for i in range(0,len(dd)):
+            aa=is_number(dd[i])
+            if aa == True:
+                lists[i].append(float(dd[i]))
+            else:
+                lists[i].append(dd[i])
+            
+    arrays=[]
+    for i in range(0,len(dd)):
+        arrays.append(np.asarray(lists[i]))
+    return(arrays)
 
+def meanspec(a,b,maxfreq,plot):
+    #[a,b]=obstools.read_files(file='text.csv',header=None,spliter=' ')
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import csv
 
+    inc=0.01
+    cond=a<=(maxfreq+inc)
+    ac=a[cond]
+    bc=b[cond]
 
+    lista=[];listb=[];x=0;n=0;bsum=0
+
+    for i in range(0,len(ac)):                                        
+       acr=float('%.2f'%(np.round(ac[i],decimals=2)))               
+       if acr == x:      
+          bsum=bsum+bc[i]
+          n=n+1
+       else:          
+          print(float('%.2f'%(np.round(acr-inc,decimals=2))),x)
+          bmean=bsum/n      
+          lista.append(float('%.20f'%(np.round(acr-inc,decimals=2))))
+          listb.append(bmean)
+          n=1    
+          x=acr     
+          bsum=bc[i]
+
+    if plot == True:
+       plt.figure(figsize=(18, 5))
+       plt.plot(lista,listb)
+       plt.ylabel('power')
+       plt.xlabel('Frequency [Hz]')
+       plt.xlim([0, maxfreq])
+       plt.show()
+
+    z=zip(lista,listb)
+    
+    fout='meanspec.txt'
+
+    with open(fout, 'w') as f:
+        writer = csv.writer(f, delimiter=' ')
+        writer.writerows(z)
+
+    

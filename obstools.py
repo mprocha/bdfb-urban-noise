@@ -85,7 +85,7 @@ def split24to01(dayfile,option):
         else:
             label=''
         
-        hourfile=str(date.year)+'-'+str("%02d" %date.month)+'-'+str("%02d" %date.day)+'-'+str("%02d:00" %(i-1))+'-'+str("%s"%sta)+'-'+str("%s.mseed"%label)
+        hourfile=str(date.year)+'-'+str("%02d" %date.month)+'-'+str("%02d" %date.day)+'-'+str("%02dh00" %(i-1))+'-'+str("%s"%sta)+'-'+str("%s.mseed"%label)
         st1h.write(dirdata+"/"+hourfile,format='MSEED')
 
 def powerspec(datafile,plot):

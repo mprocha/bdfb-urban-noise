@@ -1,3 +1,22 @@
+def prepdata(msfile):
+
+    import obspy
+    from obspy import read, UTCDateTime
+
+    st=read(msfile)
+    st.merge(method=1,fill_value=0)
+    st[0].stats['network']='GT'
+
+    date=st[0].stats['starttime']
+    net=st[0].stats['network']
+    sta=st[0].stats['station']
+    cha=st[0].stats['channel']
+
+    outfile="example_"+str(date.year)+'-'+str("%02d" %date.month)+'-'+str("%02d" %date.day)+"_"+str(net)+"."+str(sta)+".."+str(cha)+".mseed"
+
+    st.write(outfile,format='MSEED')
+    print(outfile)
+
 def splitdata(file,time):
     """
     Usage: splitdata(file, time(seconds))

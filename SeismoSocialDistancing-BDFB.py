@@ -17,9 +17,16 @@ from obspy.clients.fdsn import Client
 from obspy.signal import PPSD
 
 
-start = UTCDateTime("2020-04-20")
+start = UTCDateTime("2018-01-01")
 # Leaving UTCDateTime() empty means "now":
-end = UTCDateTime("2020-05-01")
+end = UTCDateTime("2018-04-25")
+
+ms=start.strftime("%b")
+me=(end-1).strftime("%b")
+if (ms == me):
+   monthstamp=str(ms)
+else:
+   monthstamp=str(ms)+"-"+str(me)
 
 network = "GT"
 station = "BDFB"
@@ -100,10 +107,16 @@ for day in datelist:
         else:
             ppsds[mseedid].add_npz(fn)#, allow_pickle=True)
 
+yymm=start.strftime("%Y-%m")
+[ppsd.plot(yymm+"-ppsd-"+monthstamp+".png",max_percentage=5) for mseedid, ppsd in ppsds.items()]
+#[ppsd.plot(yymm+"-ppsd-"+monthstamp+".pdf",max_percentage=5) for mseedid, ppsd in ppsds.items()]
+#[ppsd.plot(max_percentage=5) for mseedid, ppsd in ppsds.items()]
 
-[ppsd.plot(max_percentage=5) for mseedid, ppsd in ppsds.items()]
 #[ppsd.plot_temporal(0.10) for mseedid, ppsd in ppsds.items()]
-#[ppsd.plot_spectrogram(clim=(-130,-80)) for mseedid, ppsd in ppsds.items()]
+
+[ppsd.plot_spectrogram(filename=yymm+"-ppsd-spectrogram-"+monthstamp+".png",clim=(-180,-120)) for mseedid, ppsd in ppsds.items()]
+#[ppsd.plot_spectrogram(filename=yymm+"-ppsd-spectrogram-"+monthstamp+".pdf",clim=(-180,-120)) for mseedid, ppsd in ppsds.items()]
+#[ppsd.plot_spectrogram(clim=(-180,-120)) for mseedid, ppsd in ppsds.items()]
 
 # Define frequency bands of interest:
 freqs = [(0.1,1.0),(1.0,20.0),(4.0,14.0),(4.0,20.0)]
@@ -160,8 +173,8 @@ args = {'band':"4.0-14.0",       # might be None or commented ("4.0-14.0" per de
 
 import seismosocialdistancing
 
-#seismosocialdistancing.plot(displacement_RMS,type='timeseries', **args)
+seismosocialdistancing.plot(displacement_RMS,type='timeseries', **args)
 
 #seismosocialdistancing.plot(displacement_RMS,type='clockplots',**args)
 
-seismosocialdistancing.plot(displacement_RMS,type='clockmaps',**args)
+#seismosocialdistancing.plot(displacement_RMS,type='clockmaps',**args)

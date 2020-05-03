@@ -17,9 +17,9 @@ from obspy.clients.fdsn import Client
 from obspy.signal import PPSD
 
 
-start = UTCDateTime("2018-01-01")
+start = UTCDateTime("2019-01-01")
 # Leaving UTCDateTime() empty means "now":
-end = UTCDateTime("2018-04-25")
+end = UTCDateTime("2019-05-01")
 
 ms=start.strftime("%b")
 me=(end-1).strftime("%b")
@@ -42,8 +42,13 @@ logo = None # 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Logo_SE
 #bans = {"2020-03-15 00:00":'Restaurants/Bars/Schools closed', 
 #        "2020-03-18 12:00":'Non-essential shops closed'}
 
-bans = {"2020-03-12 06:00":'Universities/Schools closed', 
-        "2020-03-20 06:00":'Restaurants/Bars/Non-essential shops closed'}
+### 2020
+#bans = {"2020-03-12 06:00":'Universities/Schools closed', 
+#        "2020-03-20 06:00":'Restaurants/Bars/Non-essential shops closed'}
+
+### 2019
+bans = {"2019-03-02 06:00":'Carnival start', 
+        "2019-04-19 06:00":'Good Friday'}
 #bans = None
 
 
